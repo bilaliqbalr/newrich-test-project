@@ -9,9 +9,10 @@
 <body>
 
 <div class="container my-5">
-    <h1>Test Project</h1>
-    <div class="col-lg-8 px-0">
-        <?= $content ?>
+    <div class="row">
+        <div class="col-lg-8 px-0 m-auto">
+            <?= $content ?>
+        </div>
     </div>
 </div>
 

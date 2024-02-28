@@ -22,5 +22,5 @@ try {
     $router->handleRequest();
 
 } catch (Exception $e) {
-    echo 'An error occurred: ' . $e->getMessage();
+    App::view('error', ['error' => $e->getMessage()]);
 }
