@@ -28,6 +28,10 @@ final class App
         return self::$_database;
     }
 
+    public static function post($key, $default = null) {
+        return $_POST[$key] ?? $default;
+    }
+
     public static function view($view, $data = []) {
         $viewFile = self::$_templateDir . '/' . $view . '.php';
         if (!file_exists($viewFile)) {

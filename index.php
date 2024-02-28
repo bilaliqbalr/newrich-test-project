@@ -17,7 +17,7 @@ try {
 
     // All requests
     $router->addRoute('GET', '/', 'index');
-    $router->addRoute('GET', '/create-form', 'createForm');
+    $router->addRoute('POST', '/create-form', 'createForm');
 
     $router->handleRequest();
 

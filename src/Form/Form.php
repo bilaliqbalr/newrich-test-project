@@ -13,7 +13,7 @@ class Form {
         foreach ($fields as $field) {
             $type = $field['type'];
             $name = $field['name'];
-            $label = $field['label'];
+            $label = $field['label'] ?? '';
             $rules = isset($field['rules']) ? $field['rules'] : [];
             $options = isset($field['options']) ? $field['options'] : [];
             $sendInEmail = isset($field['email']) ? $field['email'] : false;

@@ -37,7 +37,12 @@ class Field {
 
     public function validate() {
         $valid = true;
-        foreach ($this->rules as $rule => $param) {
+        foreach ($this->rules as $rule) {
+            $param = '';
+            if (is_int(strpos($rule, ':'))) {
+                list($rule, $param) = explode(':', $rule);
+            }
+
             switch ($rule) {
                 case 'required':
                     $valid = $valid && !empty($this->value);
