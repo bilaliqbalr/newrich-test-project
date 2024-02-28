@@ -2,16 +2,17 @@
 
 class Controller {
     public function index() {
-        App::view('index.php', [
-            'name' => 'John'
+        App::view('index', [
+            'forms' => App::db()->select('forms', 'id, name, created_at, updated_at')
         ]);
     }
 
     public function createForm() {
+        $name = $_POST['name'];
         $fields = $_POST['fields'];
 
         $form = new Form($fields);
-        return $form->create();
+        return $form->create($name);
     }
 
     public function load() {

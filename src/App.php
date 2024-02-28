@@ -29,12 +29,20 @@ final class App
     }
 
     public static function view($view, $data = []) {
-        $viewFile = self::$_templateDir . '/' . $view;
+        $viewFile = self::$_templateDir . '/' . $view . '.php';
         if (!file_exists($viewFile)) {
             throw new \Exception('View file not found');
         }
 
         extract($data);
-        require $viewFile;
+        ob_start();
+        include_once $viewFile;
+        $content = ob_get_clean();
+
+        return require self::$_templateDir . '/layout.php';
+    }
+
+    public static function asset($string) {
+        return self::$_config['url'] . 'assets/' . $string;
     }
 }

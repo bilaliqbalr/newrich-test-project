@@ -57,7 +57,7 @@ class Form {
         return $formFields;
     }
 
-    public function create() {
+    public function create($name) {
         if (!empty($this->invalidFields)) {
             return [
                 'status' => false,
@@ -66,6 +66,7 @@ class Form {
         }
 
         App::db()->insert('forms', [
+            'name' => $name,
             'fields' => json_encode($this->formFieldsArray()),
         ]);
 
