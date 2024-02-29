@@ -18,6 +18,18 @@ class Field {
         $this->sendInEmail = $sendInEmail;
     }
 
+    public function getName() {
+        return $this->name;
+    }
+
+    public function getLabel() {
+        return $this->label;
+    }
+
+    public function getValue() {
+        return $this->value;
+    }
+
     public function sendInEmail() {
         return $this->sendInEmail;
     }
@@ -91,9 +103,9 @@ class InputField extends Field {
     public function render() {
         $allowedTypes = ['text', 'email', 'password', 'url', 'number'];
         $type = in_array($this->type, $allowedTypes) ? $this->type : 'text';
-        $html = "<div class='form-group'>";
+        $html = "<div class='form-group mt-3'>";
         $html .= $this->label();
-        $html .= "<input type='$type' class='form-control' id='{$this->name}' name='{$this->name}' value='{$this->value}'";
+        $html .= "<input type='$type' class='form-control' id='{$this->name}' name='data[{$this->name}]' value='{$this->value}'";
         if (in_array('required', $this->rules)) {
             $html .= " required";
         }
@@ -105,16 +117,20 @@ class InputField extends Field {
 
 class HiddenField extends Field {
     public function render() {
-        $html = "<input type='hidden' id='{$this->name}' name='{$this->name}' value='{$this->value}'";
+        $html = "<input type='hidden' id='{$this->name}' name='data[{$this->name}]' value='{$this->value}' />";
         return $html;
     }
 }
 
 class TextAreaField extends Field {
     public function render() {
-        $html = "<div class='form-group'>";
+        $html = "<div class='form-group mt-3'>";
         $html .= $this->label();
-        $html .= "<textarea class='form-control' id='{$this->name}' name='{$this->name}' rows='5'>{$this->value}</textarea>";
+        $html .= "<textarea class='form-control' id='{$this->name}' name='data[{$this->name}]' rows='5'";
+        if (in_array('required', $this->rules)) {
+            $html .= " required";
+        }
+        $html .= ">{$this->value}</textarea>";
         $html .= "</div>";
         return $html;
     }
@@ -133,7 +149,7 @@ class CheckboxField extends Field {
 
     public function render() {
         $html = "";
-        $html .= "<div class='form-group'>";
+        $html .= "<div class='form-group mt-3'>";
         $html .= "<label>{$this->label}</label>";
         foreach ($this->options as $key => $optionValue) {
             $checked = in_array($key, $this->value) ? 'checked' : '';
@@ -166,12 +182,12 @@ class RadioField extends Field {
 
     public function render() {
         $html = "";
-        $html .= "<div class='form-group'>";
+        $html .= "<div class='form-group mt-3'>";
         $html .= "<label>{$this->label}</label>";
         foreach ($this->options as $key => $optionValue) {
             $checked = ($key == $this->value) ? 'checked' : '';
             $html .= "<div class='form-check'>";
-            $html .= "<input class='form-check-input' type='radio' name='{$this->name}' id='{$this->name}_{$key}' value='$key' $checked>";
+            $html .= "<input class='form-check-input' type='radio' name='data[{$this->name}]' id='{$this->name}_{$key}' value='$key' $checked>";
             $html .= "<label class='form-check-label' for='{$this->name}_{$key}'>{$optionValue}</label>";
             $html .= "</div>";
         }
@@ -198,9 +214,9 @@ class SelectField extends Field {
     }
 
     public function render() {
-        $html = "<div class='form-group'>";
+        $html = "<div class='form-group mt-3'>";
         $html .= $this->label();
-        $html .= "<select class='form-control' id='{$this->name}' name='{$this->name}'>";
+        $html .= "<select class='form-control' id='{$this->name}' name='data[{$this->name}]'>";
         foreach ($this->options as $key => $optionValue) {
             $selected = ($key == $this->value) ? 'selected' : '';
             $html .= "<option value='$key' $selected>$optionValue</option>";

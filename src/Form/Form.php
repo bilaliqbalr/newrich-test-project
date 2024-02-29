@@ -5,9 +5,14 @@ class Form {
     protected $fields;
     protected $errors;
     protected $invalidFields = [];
+    /**
+     * @var mixed|null
+     */
+    private mixed $formId;
 
-    public function __construct(array $fields, array $values = []) {
+    public function __construct(array $fields, array $values = [], $formId = null) {
         $this->fields = [];
+        $this->formId = $formId;
 
         // Convert field data into appropriate field objects
         foreach ($fields as $field) {
@@ -77,21 +82,22 @@ class Form {
 
     public function validateForm() {
         $this->errors = [];
-        if (empty($_POST['g-recaptcha-response'])) {
+        $captchaResp = App::post('g-recaptcha-response');
+        if (empty($captchaResp)) {
             $this->errors['g-recaptcha-response'] = 'Please verify you are not a robot.';
         } else {
             $secret = App::config('recaptcha')['secret'];
-            $url = 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret . '&response=' . $_POST['g-recaptcha-response'];
+            $url = 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret . '&response=' . $captchaResp;
             $response = file_get_contents($url);
-            $response = json_decode($response);
-            if (!$response->success) {
-                $this->errors[] = 'Failed reCAPTCHA verification.';
+            $response = json_decode($response, true);
+            if (!$response['success']) {
+                $this->errors['g-recaptcha-response'] = 'Failed reCAPTCHA verification.';
             }
         }
 
         foreach ($this->fields as $field) {
             if (!$field->validate()) {
-                $this->errors[$field->name] = implode("\n", $field->getErrors());
+                $this->errors[$field->getName()] = implode("\n", $field->getErrors());
             }
         }
 
@@ -102,11 +108,14 @@ class Form {
         if ($this->validateForm()) {
             $data = [];
             foreach ($this->fields as $field) {
-                $data[$field->name] = $field->value;
+                $data[$field->getName()] = $field->getValue();
             }
 
             // saving to database
-            App::db()->insert('forms', $data);
+            App::db()->insert('form_submissions', [
+                'form_id' => $this->formId,
+                'data' => json_encode($data),
+            ]);
 
             return [
                 'status' => true
@@ -126,10 +135,21 @@ class Form {
             $html .= $field->render();
         }
         $siteKey = App::config('recaptcha')['site_key'];
-        $html .= "<div class='g-recaptcha' data-sitekey='$siteKey'></div>";
-        $html .= "<button type='submit'>Submit</button>";
+        $html .= "<div class='g-recaptcha mt-3' data-sitekey='$siteKey'></div>";
+        $html .= "<input type='hidden' name='form_id' value='{$this->formId}'>";
+        $html .= "<div class='text-center mt-3'>";
+        $html .= "<button class='btn btn-primary' type='submit'>Submit</button>";
+        $html .= "</div>";
         $html .= "</form>";
         return $html;
+    }
+
+    public function formatData() {
+        $data = [];
+        foreach ($this->fields as $field) {
+            $data[$field->getLabel()] = $field->getValue();
+        }
+        return $data;
     }
 
     public function sendEmail($to) {

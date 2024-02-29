@@ -4,7 +4,7 @@
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>Id</th>
+            <th>ID</th>
             <th>Name</th>
             <th>Created At</th>
             <th>Updated At</th>
@@ -20,8 +20,8 @@
                 <td><?= $form['created_at'] ?></td>
                 <td><?= $form['updated_at'] ?></td>
                 <td>
-                    <a href="/submissions?id=<?= $form['id'] ?>">All Submission</a>
-                    <a href="/new?id=<?= $form['id'] ?>">New</a>
+                    <a class="btn btn-sm btn-outline-primary" href="/submissions?id=<?= $form['id'] ?>">All Submission</a>
+                    <a class="btn btn-sm btn-outline-success" href="/new?id=<?= $form['id'] ?>">New</a>
                 </td>
             </tr>
         <?php endforeach; ?>

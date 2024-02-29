@@ -17,10 +17,15 @@ try {
 
     // All requests
     $router->addRoute('GET', '/', 'index');
-    $router->addRoute('POST', '/create-form', 'createForm');
+    $router->addRoute('GET', '/submissions', 'formSubmissions');
+    $router->addRoute('GET', '/new', 'createForm');
+    $router->addRoute('POST', '/submit', 'submitForm');
+
+    // API requests
+    $router->addRoute('POST', '/create-form', 'createNewFormFromApi');
 
     $router->handleRequest();
 
 } catch (Exception $e) {
-    App::view('error', ['error' => $e->getMessage()]);
+    App::view('error', ['message' => $e->getMessage()]);
 }

@@ -10,7 +10,7 @@ return [
         'port' => '3308'
     ],
     'recaptcha' => [
-        'site_key' => '',
-        'secret' => '',
+        'site_key' => '6LcVS4QpAAAAAPZgmUhzdqYO0zi2KltwEQ6zn0P9',
+        'secret' => '6LcVS4QpAAAAANC9vhZlhVoCCVVV2SxKuCsarDJC',
     ]
 ];

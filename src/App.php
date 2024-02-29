@@ -28,6 +28,10 @@ final class App
         return self::$_database;
     }
 
+    public static function get($key, $default = null) {
+        return $_GET[$key] ?? $default;
+    }
+
     public static function post($key, $default = null) {
         return $_POST[$key] ?? $default;
     }
@@ -35,7 +39,7 @@ final class App
     public static function view($view, $data = []) {
         $viewFile = self::$_templateDir . '/' . $view . '.php';
         if (!file_exists($viewFile)) {
-            throw new \Exception('View file not found');
+            throw new \Exception("View file '$view' not found");
         }
 
         extract($data);
@@ -44,6 +48,10 @@ final class App
         $content = ob_get_clean();
 
         return require self::$_templateDir . '/layout.php';
+    }
+
+    public static function url($path) {
+        return self::$_config['url'] . $path;
     }
 
     public static function asset($string) {

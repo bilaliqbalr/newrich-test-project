@@ -19,6 +19,10 @@ class Database {
         $this->connect();
     }
 
+    public function __destruct() {
+        $this->disconnect();
+    }
+
     public function connect() {
         $this->connection = new mysqli($this->host, $this->user, $this->password, $this->db, $this->port);
         if ($this->connection->connect_error) {
@@ -30,10 +34,12 @@ class Database {
         $this->connection->close();
     }
 
-    public function select($table, $columns = "*", $where = null, $order = null, $limit = null) {
+    public function select($table, $columns = "*", $where = [], $order = null, $limit = null) {
         $sql = "SELECT $columns FROM $table";
-        if ($where) {
-            $sql .= " WHERE $where";
+        if (!empty($where)) {
+            $sql .= " WHERE " . implode(" AND ", array_map(function($key, $value) {
+                return "$key=?";
+            }, array_keys($where), $where));
         }
         if ($order) {
             $sql .= " ORDER BY $order";
@@ -41,18 +47,14 @@ class Database {
         if ($limit) {
             $sql .= " LIMIT $limit";
         }
-        $result = $this->connection->query($sql);
 
-        if ($result->num_rows > 0) {
-            // Fetch data as associative or object arrays
-            $rows = [];
-            while ($row = $result->fetch_assoc()) {
-                $rows[] = $row;
-            }
-            return $rows;
-        } else {
-            return [];
+        $stmt = $this->connection->prepare($sql);
+        if (!empty($where)) {
+            $stmt->bind_param(str_repeat('s', count($where)), ...array_values($where));
         }
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_all(MYSQLI_ASSOC);
     }
 
     public function insert($table, $data) {
@@ -65,7 +67,7 @@ class Database {
         $stmt->execute();
 
         if ($stmt->affected_rows === 1) {
-            return $this->connection->insert_id; // Return the inserted ID
+            return $this->connection->insert_id;
         } else {
             return false;
         }
@@ -81,18 +83,17 @@ class Database {
         $sql = "UPDATE $table SET $updates WHERE $where";
         $stmt = $this->connection->prepare($sql);
         $bind_params = array_merge([str_repeat('s', count($data))], array_values($data));
-        $stmt->bind_param(...$bind_params); // Add where clause parameters as well
+        $stmt->bind_param(...$bind_params);
         $stmt->execute();
 
-        return $stmt->affected_rows; // Return number of affected rows
+        return $stmt->affected_rows;
     }
 
     public function delete($table, $where) {
         $sql = "DELETE FROM $table WHERE $where";
         $result = $this->connection->query($sql);
-        return $this->connection->affected_rows; // Return number of affected rows
+        return $this->connection->affected_rows;
     }
 
-    // ... Add methods for other database operations (e.g., prepared statements)
 }
 
