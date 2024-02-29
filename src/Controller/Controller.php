@@ -140,8 +140,11 @@ class Controller
         $form = $this->getForm($formId);
 
         $form = new Form($form['fields'], $data, $formId);
-        $this->toJson(
-            $form->submit()
-        );
+        $response = $form->submit();
+
+        // Sending email
+        $form->sendEmail(App::config('email_address'));
+
+        $this->toJson($response);
     }
 }

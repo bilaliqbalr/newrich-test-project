@@ -142,7 +142,7 @@ class CheckboxField extends Field {
     public function __construct($type, $name, $label, $rules, $options, $value = null, $sendInEmail = false) {
         parent::__construct($type, $name, $label, $rules, $value, $sendInEmail);
         if (!is_array($value)) {
-            $this->value = (array) $value; // Convert value to array for consistency
+            $this->value = (array) $value;
         }
         $this->options = $options;
     }
@@ -154,7 +154,7 @@ class CheckboxField extends Field {
         foreach ($this->options as $key => $optionValue) {
             $checked = in_array($key, $this->value) ? 'checked' : '';
             $html .= "<div class='form-check'>";
-            $html .= "<input class='form-check-input' type='checkbox' name='{$this->name}[]' id='{$this->name}_{$key}' value='$key' $checked>";
+            $html .= "<input class='form-check-input' type='checkbox' name='data[{$this->name}][]' id='{$this->name}_{$key}' value='$key' $checked>";
             $html .= "<label class='form-check-label' for='{$this->name}_{$key}'>{$optionValue}</label>";
             $html .= "</div>";
         }
@@ -163,12 +163,18 @@ class CheckboxField extends Field {
     }
 
     public function validate() {
-        $valid = parent::validate();
+        $valid = parent::validate(['required']);
         if ($valid && in_array('required', $this->rules) && empty($this->value)) {
             $valid = false;
             $this->errors[] = "$this->label is required";
         }
         return $valid;
+    }
+
+    public function toArray() {
+        $array = parent::toArray();
+        $array['options'] = $this->options;
+        return $array;
     }
 }
 
@@ -203,6 +209,12 @@ class RadioField extends Field {
         }
         return $valid;
     }
+
+    public function toArray() {
+        $array = parent::toArray();
+        $array['options'] = $this->options;
+        return $array;
+    }
 }
 
 class SelectField extends Field {
@@ -233,5 +245,11 @@ class SelectField extends Field {
             $this->errors[] = "$this->label is required";
         }
         return $valid;
+    }
+
+    public function toArray() {
+        $array = parent::toArray();
+        $array['options'] = $this->options;
+        return $array;
     }
 }

@@ -80,6 +80,11 @@ class Form {
         ];
     }
 
+    /**
+     * Perform form validation
+     *
+     * @return bool
+     */
     public function validateForm() {
         $this->errors = [];
         $captchaResp = App::post('g-recaptcha-response');
@@ -104,6 +109,11 @@ class Form {
         return empty($this->errors);
     }
 
+    /**
+     * Create new form from API and send email
+     *
+     * @return array|true[]
+     */
     public function submit() {
         if ($this->validateForm()) {
             $data = [];
@@ -129,10 +139,17 @@ class Form {
         }
     }
 
+    /**
+     * Generate HTML for form
+     *
+     * @param $action
+     * @param $method
+     * @return string
+     */
     public function render($action = '', $method = 'post') {
-        $html = "<form action='$action' method='$method'>";
+        $html = "<form action='$action' method='$method'>\n";
         foreach ($this->fields as $field) {
-            $html .= $field->render();
+            $html .= $field->render() . "\n";
         }
         $siteKey = App::config('recaptcha')['site_key'];
         $html .= "<div class='g-recaptcha mt-3' data-sitekey='$siteKey'></div>";
@@ -144,6 +161,10 @@ class Form {
         return $html;
     }
 
+    /**
+     * Returns form data into label and value pair
+     * @return array
+     */
     public function formatData() {
         $data = [];
         foreach ($this->fields as $field) {
@@ -158,7 +179,7 @@ class Form {
         $html .= "<ul>";
         foreach ($this->fields as $field) {
             if ($field->sendInEmail()) {
-                $html .= "<li><strong>{$field->label}:</strong> {$field->value}</li>";
+                $html .= "<li><strong>{$field->getLabel()}:</strong> {$field->getValue()}</li>";
             }
         }
         $html .= "</ul>";

@@ -32,7 +32,7 @@
         <?php endforeach; ?>
     <?php else: ?>
         <tr>
-            <td class="text-center" colspan="5">No form found</td>
+            <td class="text-center" colspan="5">No submission found</td>
         </tr>
     <?php endif; ?>
     </tbody>
