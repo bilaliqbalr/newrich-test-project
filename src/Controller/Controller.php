@@ -78,6 +78,8 @@ class Controller
 
             $formObj = new Form($form['fields'], $data, $form['id']);
             $submission['data'] = $formObj->formatData();
+            $formObj->sendEmail(App::config('email_address'));
+
             $submissions[$submission['id']] = $submission;
         }
 

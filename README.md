@@ -16,27 +16,27 @@ $data = [
             "type" => "text",
             "label" => "Name",
             "rules" => ["required"],
-            "email" => false,
+            "sendInEmail" => false,
         ],
         [
             "name" => "email",
             "type" => "email",
             "label" => "Email",
             "rules" => ["required"],
-            "email" => true,
+            "sendInEmail" => true,
         ],
         [
             "name" => "age",
             "type" => "number",
             "label" => "Age",
             "rules" => ["required", "min:10"],
-            "email" => false,
+            "sendInEmail" => false,
         ],
         [
             "name" => "company",
             "type" => "text",
             "label" => "Company",
-            "email" => false,
+            "sendInEmail" => false,
         ],
         [
             "name" => "gender",
@@ -47,7 +47,7 @@ $data = [
                 "Female" => "Female",
             ],
             "rules" => ["required"],
-            "email" => true,
+            "sendInEmail" => true,
         ],
         [
             "name" => "allow",
@@ -58,7 +58,7 @@ $data = [
                 "no" => "No",
             ],
             "rules" => ["required"],
-            "email" => true,
+            "sendInEmail" => true,
         ],
         [
             "name" => "how_you_know",
@@ -71,19 +71,19 @@ $data = [
                 "other" => "Other",
             ],
             "rules" => ["required"],
-            "email" => true,
+            "sendInEmail" => true,
         ],
         [
             "name" => "details",
             "type" => "textarea",
             "label" => "Details",
             "rules" => ["required"],
-            "email" => false,
+            "sendInEmail" => false,
         ],
         [
             "name" => "id",
             "type" => "hidden",
-            "email" => false,
+            "sendInEmail" => false,
         ],
     ]
 ];

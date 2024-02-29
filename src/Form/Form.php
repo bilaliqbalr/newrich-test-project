@@ -21,7 +21,7 @@ class Form {
             $label = $field['label'] ?? '';
             $rules = isset($field['rules']) ? $field['rules'] : [];
             $options = isset($field['options']) ? $field['options'] : [];
-            $sendInEmail = isset($field['email']) ? $field['email'] : false;
+            $sendInEmail = isset($field['sendInEmail']) ? $field['sendInEmail'] : false;
             $value = isset($values[$name]) ? $values[$name] : null;
 
             switch ($type) {

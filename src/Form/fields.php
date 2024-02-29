@@ -27,7 +27,7 @@ class Field {
     }
 
     public function getValue() {
-        return $this->value;
+        return is_array($this->value) ? implode(', ', $this->value) : $this->value;
     }
 
     public function sendInEmail() {
