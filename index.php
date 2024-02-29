@@ -3,7 +3,6 @@
 $rootDir = __DIR__;
 $srcDir = $rootDir . '/src';
 
-require $srcDir . '/Helper/functions.php';
 require $srcDir . '/App.php';
 require $srcDir . '/Database.php';
 require $srcDir . '/Form/Form.php';
